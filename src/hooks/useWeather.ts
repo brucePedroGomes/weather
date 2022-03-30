@@ -13,7 +13,17 @@ type WeatherResponse = {
     id: number;
     main: string;
     description: string;
+    icon: string;
   }>;
+  sys: { counter: string };
+  main: {
+    feels_like: number;
+    humidity: number;
+    pressure: number;
+    temp: number;
+    temp_max: number;
+    temp_min: number;
+  };
 };
 
 function getWeather(params: RequestWeather) {
@@ -26,5 +36,5 @@ function getWeather(params: RequestWeather) {
 }
 
 export function useWeather(params: RequestWeather) {
-  return useQuery(["weather", params], getWeather(params));
+  return useQuery(["weather", 1], getWeather(params));
 }

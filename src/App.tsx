@@ -1,9 +1,21 @@
-function App() {
+import { Container } from "@chakra-ui/react";
+
+import { NeedLocation } from "./components";
+import { Home } from "./pages";
+
+export function App() {
   return (
-    <div className="App">
-      <p>weather</p>
-    </div>
+    <Container
+      as="main"
+      p="28"
+      display="flex"
+      flexDir="column"
+      alignItems="center"
+      justifyContent="center"
+    >
+      <NeedLocation>
+        <Home />
+      </NeedLocation>
+    </Container>
   );
 }
-
-export default App;
