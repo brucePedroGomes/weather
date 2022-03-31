@@ -7,8 +7,10 @@ import {
   Text,
   VStack,
   SimpleGrid,
+  Spinner,
+  Divider,
 } from "@chakra-ui/react";
-import { WeatherResponse } from "../hooks";
+import { useWeather } from "../hooks";
 import { MdOutlineLocationOn } from "react-icons/md";
 import { BsWind } from "react-icons/bs";
 import { WiHumidity } from "react-icons/wi";
@@ -18,16 +20,30 @@ import { format } from "date-fns";
 import { IconAndLabel } from "./IconAndLabel";
 import { BsFillSunriseFill, BsFillSunsetFill } from "react-icons/bs";
 import { FaTemperatureHigh, FaTemperatureLow } from "react-icons/fa";
+import { useAtom } from "jotai";
+import { locationAtom } from "../atoms";
+import { GenericError } from "./Feedback";
 
-type Props = {
-  data: WeatherResponse;
-};
+export function CurrentWeather() {
+  const [location] = useAtom(locationAtom);
 
-export function Weather({ data }: Props) {
+  const { data, isLoading, error } = useWeather({
+    lat: location.latitude,
+    lon: location.longitude,
+  });
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (error || !data) {
+    return <GenericError />;
+  }
+
   const weather = data.weather[0];
 
   return (
-    <VStack alignItems="start">
+    <VStack alignItems="start" w="full">
       <HStack>
         <Icon as={MdOutlineLocationOn} boxSize="9" />
         <VStack>
@@ -38,7 +54,10 @@ export function Weather({ data }: Props) {
 
       <HStack>
         <Flex flexDir="column">
-          <Text fontSize="7xl">{Math.round(data?.main.temp) + "°F"}</Text>
+          <Flex align="center">
+            <Text fontSize="6xl">{Math.round(data?.main.temp)}</Text>
+            <Text fontSize="3xl">°C</Text>
+          </Flex>
 
           <Text minW="full" textTransform="capitalize" isTruncated>
             {weather.description}
@@ -53,7 +72,12 @@ export function Weather({ data }: Props) {
         />
       </HStack>
 
-      <SimpleGrid columns={3} spacing={5}>
+      <SimpleGrid
+        justifyContent="center"
+        w="full"
+        columns={{ base: 2, lg: 3 }}
+        spacing={10}
+      >
         <IconAndLabel
           icon={BsWind}
           label={getWideSpeedInMph(data.wind.speed) + " mph"}
@@ -72,12 +96,12 @@ export function Weather({ data }: Props) {
 
         <IconAndLabel
           icon={FaTemperatureHigh}
-          label={data.main.temp_max + "°F"}
+          label={data.main.temp_max + "°C"}
         />
 
         <IconAndLabel
           icon={FaTemperatureLow}
-          label={data.main.temp_min + "°F"}
+          label={data.main.temp_min + "°C"}
         />
       </SimpleGrid>
     </VStack>

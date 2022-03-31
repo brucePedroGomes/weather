@@ -8,6 +8,8 @@ export function App() {
     <Container
       as="main"
       pt="28"
+      w="full"
+      maxWidth="container.sm"
       display="flex"
       flexDir="column"
       alignItems="center"

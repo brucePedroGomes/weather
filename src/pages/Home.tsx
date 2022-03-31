@@ -1,21 +1,20 @@
-import { Spinner, VStack } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 
-import { useEffect, useState } from "react";
-import { GenericError } from "../components";
-import { Weather } from "../components/Weather";
-import { useWeather } from "../hooks";
+import { useEffect } from "react";
+import { useAtom } from "jotai";
+import { locationAtom } from "../atoms";
+
+import { CurrentWeather } from "../components/";
 
 export function Home() {
-  const [position, setPosition] = useState<GeolocationPosition>();
-
-  const { data, isLoading, error } = useWeather({
-    lat: position?.coords.latitude ?? 0,
-    lon: position?.coords.longitude ?? 0,
-  });
+  const [, setLocation] = useAtom(locationAtom);
 
   useEffect(() => {
     function success(position: GeolocationPosition) {
-      setPosition(position);
+      setLocation({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      });
     }
 
     function error(error: GeolocationPositionError) {
@@ -23,16 +22,11 @@ export function Home() {
     }
 
     navigator.geolocation.getCurrentPosition(success, error);
-  }, []);
-
-  if (error) {
-    return <GenericError />;
-  }
+  }, [setLocation]);
 
   return (
-    <VStack>
-      {isLoading && <Spinner />}
-      {data && <Weather data={data} />}
+    <VStack bgColor="gray.700" borderRadius="30px" p="6">
+      <CurrentWeather />
     </VStack>
   );
 }
