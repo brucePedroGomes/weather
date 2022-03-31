@@ -7,7 +7,7 @@ export function App() {
   return (
     <Container
       as="main"
-      p="28"
+      pt="28"
       display="flex"
       flexDir="column"
       alignItems="center"

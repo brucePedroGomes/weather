@@ -6,7 +6,7 @@ type RequestWeather = {
   lon: number;
 };
 
-type WeatherResponse = {
+export type WeatherResponse = {
   name: string;
   coord: { lon: number; lat: number };
   weather: Array<{
@@ -15,7 +15,7 @@ type WeatherResponse = {
     description: string;
     icon: string;
   }>;
-  sys: { counter: string };
+  sys: { country: string; sunrise: number; sunset: number };
   main: {
     feels_like: number;
     humidity: number;
@@ -24,17 +24,20 @@ type WeatherResponse = {
     temp_max: number;
     temp_min: number;
   };
+  wind: {
+    speed: number;
+  };
 };
 
 function getWeather(params: RequestWeather) {
   return async () => {
     const { data } = await api.get<WeatherResponse>(
-      `/weather?lat=${params.lat}&lon=${params.lon}`
+      `/weather?lat=${params.lat}&lon=${params.lon}&units=imperial`
     );
     return data;
   };
 }
 
 export function useWeather(params: RequestWeather) {
-  return useQuery(["weather", 1], getWeather(params));
+  return useQuery(["weather", params], getWeather(params));
 }
