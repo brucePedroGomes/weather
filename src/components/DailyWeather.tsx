@@ -1,4 +1,12 @@
-import { Box, HStack, Img, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  Img,
+  SimpleGrid,
+  Skeleton,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { format } from "date-fns";
 import { useAtom } from "jotai";
 import { locationAtom, unitsAtom } from "../atoms";
@@ -10,7 +18,7 @@ import {
   HiOutlineArrowNarrowDown,
   HiOutlineArrowNarrowUp,
 } from "react-icons/hi";
-import { GenericError, Loading } from "./Feedback";
+import { GenericError } from "./Feedback";
 
 function getWeekName(date: Date) {
   return format(date, "EEEE");
@@ -26,39 +34,37 @@ export function DailyWeather() {
     units,
   });
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
-  if (error || !data) {
+  if (error) {
     return <GenericError />;
   }
 
   const daily = data?.daily.slice(0, 8) ?? [];
 
   return (
-    <SimpleGrid columns={[2, 4]} flexDir={["column", "row"]} w="full">
-      {daily.map((d) => (
-        <Box padding="6" key={d.dt}>
-          <VStack>
-            <Text>{getWeekName(msToDate(d.dt))}</Text>
+    <Skeleton isLoaded={!isLoading}>
+      <SimpleGrid columns={[2, 4]} flexDir={["column", "row"]} w="full">
+        {daily.map((d) => (
+          <Box padding="6" key={d.dt}>
+            <VStack>
+              <Text>{getWeekName(msToDate(d.dt))}</Text>
 
-            <Img src={getImgUrl(d.weather[0].icon)} height="16" />
-            <HStack>
-              <Temp
-                temp={d.temp.max}
-                color="red.500"
-                icon={HiOutlineArrowNarrowUp}
-              />
-              <Temp
-                temp={d.temp.min}
-                color="blue.400"
-                icon={HiOutlineArrowNarrowDown}
-              />
-            </HStack>
-          </VStack>
-        </Box>
-      ))}
-    </SimpleGrid>
+              <Img src={getImgUrl(d.weather[0].icon)} height="16" />
+              <HStack>
+                <Temp
+                  temp={d.temp.max}
+                  color="red.500"
+                  icon={HiOutlineArrowNarrowUp}
+                />
+                <Temp
+                  temp={d.temp.min}
+                  color="blue.400"
+                  icon={HiOutlineArrowNarrowDown}
+                />
+              </HStack>
+            </VStack>
+          </Box>
+        ))}
+      </SimpleGrid>
+    </Skeleton>
   );
 }
