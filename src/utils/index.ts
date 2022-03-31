@@ -18,5 +18,5 @@ export function getWindSpeed(speed: number, units: Units) {
     return Math.round(speed * 3.6) + " km/h";
   }
 
-  return Math.round(speed * 1.609) + " mph";
+  return Math.round(speed) + " mph";
 }

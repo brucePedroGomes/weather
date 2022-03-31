@@ -30,7 +30,7 @@ export type WeatherResponse = {
   };
 };
 
-function getWeather(params: RequestWeather) {
+function getCurrentWeather(params: RequestWeather) {
   return async () => {
     const { data } = await api.get<WeatherResponse>(
       `/weather?lat=${params.lat}&lon=${params.lon}&units=${params.units}`
@@ -39,6 +39,6 @@ function getWeather(params: RequestWeather) {
   };
 }
 
-export function useWeather(params: RequestWeather) {
-  return useQuery(["weather", params], getWeather(params));
+export function useCurrentWeather(params: RequestWeather) {
+  return useQuery(["weather", params], getCurrentWeather(params));
 }
