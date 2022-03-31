@@ -7,7 +7,8 @@ export function App() {
   return (
     <Container
       as="main"
-      pt="28"
+      pt="12"
+      pb="8"
       w="full"
       minW="96"
       maxWidth="container.sm"
