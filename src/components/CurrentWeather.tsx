@@ -7,7 +7,6 @@ import {
   Text,
   VStack,
   SimpleGrid,
-  Spinner,
   Skeleton,
 } from "@chakra-ui/react";
 import { useCurrentWeather } from "../hooks";
@@ -22,8 +21,9 @@ import { BsFillSunriseFill, BsFillSunsetFill } from "react-icons/bs";
 import { FaTemperatureHigh, FaTemperatureLow } from "react-icons/fa";
 import { useAtom } from "jotai";
 import { locationAtom, Units, unitsAtom } from "../atoms";
-import { GenericError } from "./Feedback";
+import { GenericError, Loading } from "./Feedback";
 import { CelsiusOrFahrenheit } from "./CelsiusOrFahrenheit";
+import { RefetchButton } from "./RefetchButton";
 
 export function CurrentWeather() {
   const [location] = useAtom(locationAtom);
@@ -36,7 +36,7 @@ export function CurrentWeather() {
   })!;
 
   if (isLoading) {
-    return <Spinner />;
+    return <Loading />;
   }
 
   if (error || !data) {
@@ -49,7 +49,7 @@ export function CurrentWeather() {
   return (
     <Skeleton w="full" isLoaded={data && !isLoading}>
       <VStack alignItems="start" w="full">
-        <HStack>
+        <HStack justifyContent="space-between" w="full">
           <VStack>
             <Flex align="center">
               <Icon as={MdOutlineLocationOn} boxSize="8" />
@@ -60,6 +60,7 @@ export function CurrentWeather() {
               {format(new Date(), "eeee '•' h':'mma ")}{" "}
             </Text>
           </VStack>
+          <RefetchButton />
         </HStack>
 
         <HStack

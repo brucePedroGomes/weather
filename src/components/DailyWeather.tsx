@@ -1,15 +1,4 @@
-import {
-  Box,
-  Divider,
-  Flex,
-  HStack,
-  Img,
-  SimpleGrid,
-  Spinner,
-  Stack,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, HStack, Img, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { useAtom } from "jotai";
 import { locationAtom, unitsAtom } from "../atoms";
@@ -21,7 +10,7 @@ import {
   HiOutlineArrowNarrowDown,
   HiOutlineArrowNarrowUp,
 } from "react-icons/hi";
-import { GenericError } from "./Feedback";
+import { GenericError, Loading } from "./Feedback";
 
 function getWeekName(date: Date) {
   return format(date, "EEEE");
@@ -38,7 +27,7 @@ export function DailyWeather() {
   });
 
   if (isLoading) {
-    return <Spinner />;
+    return <Loading />;
   }
 
   if (error || !data) {

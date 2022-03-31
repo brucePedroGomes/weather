@@ -13,5 +13,7 @@ function getCurrentWeather(params: RequestWeather) {
 }
 
 export function useCurrentWeather(params: RequestWeather) {
-  return useQuery(["currentWeather", params], getCurrentWeather(params));
+  return useQuery(["currentWeather", params], getCurrentWeather(params), {
+    staleTime: 2000,
+  });
 }

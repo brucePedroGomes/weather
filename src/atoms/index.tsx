@@ -12,4 +12,4 @@ export enum Units {
   fahrenheit = "imperial",
 }
 
-export const unitsAtom = atom<Units>(Units.fahrenheit);
+export const unitsAtom = atom<Units>(Units.celsius);

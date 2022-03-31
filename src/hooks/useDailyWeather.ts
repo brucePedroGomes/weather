@@ -15,5 +15,7 @@ function getDailyWeather(params: RequestWeather) {
 }
 
 export function useDailyWeather(params: RequestWeather) {
-  return useQuery(["dailyWeather", params], getDailyWeather(params));
+  return useQuery(["dailyWeather", params], getDailyWeather(params), {
+    staleTime: 2000,
+  });
 }
