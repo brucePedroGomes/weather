@@ -29,7 +29,7 @@ function UnstyledButton({ label, ...rest }: { label: string } & ButtonProps) {
   return (
     <Button
       variant="unstyled"
-      fontSize="3xl"
+      fontSize="4xl"
       {...rest}
       _focus={{ border: "none" }}
     >

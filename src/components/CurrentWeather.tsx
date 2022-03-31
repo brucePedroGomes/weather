@@ -8,6 +8,7 @@ import {
   VStack,
   SimpleGrid,
   Spinner,
+  Skeleton,
 } from "@chakra-ui/react";
 import { useCurrentWeather } from "../hooks";
 import { MdOutlineLocationOn } from "react-icons/md";
@@ -23,18 +24,15 @@ import { useAtom } from "jotai";
 import { locationAtom, Units, unitsAtom } from "../atoms";
 import { GenericError } from "./Feedback";
 import { CelsiusOrFahrenheit } from "./CelsiusOrFahrenheit";
-import { useMemo } from "react";
 
 export function CurrentWeather() {
   const [location] = useAtom(locationAtom);
   const [units] = useAtom(unitsAtom);
 
-  const isCelsius = useMemo(() => units === Units.celsius, [units]);
-
   const { data, isLoading, error } = useCurrentWeather({
     lat: location.latitude,
     lon: location.longitude,
-    units: isCelsius ? "metric" : "imperial",
+    units,
   })!;
 
   if (isLoading) {
@@ -46,70 +44,84 @@ export function CurrentWeather() {
   }
 
   const weather = data.weather[0];
-  const unitsLabel = isCelsius ? " °C" : " °F";
+  const unitsLabel = units === Units.celsius ? " °C" : " °F";
 
   return (
-    <VStack alignItems="start" w="full">
-      <HStack>
-        <Icon as={MdOutlineLocationOn} boxSize="9" />
-        <VStack>
-          <Heading>{data.name}</Heading>
-          <Text fontSize="sm"> {format(new Date(), "eeee '•' h':'mma ")} </Text>
-        </VStack>
-      </HStack>
+    <Skeleton w="full" isLoaded={data && !isLoading}>
+      <VStack alignItems="start" w="full">
+        <HStack>
+          <VStack>
+            <Flex align="center">
+              <Icon as={MdOutlineLocationOn} boxSize="8" />
+              <Heading>{data.name}</Heading>
+            </Flex>
 
-      <HStack w="full" justifyContent="space-between">
-        <Flex flexDir="column">
-          <Flex align="center">
-            <Text fontSize="6xl">{Math.round(data.main.temp)}</Text>
-            <CelsiusOrFahrenheit />
+            <Text paddingLeft="6" fontSize="sm">
+              {format(new Date(), "eeee '•' h':'mma ")}{" "}
+            </Text>
+          </VStack>
+        </HStack>
+
+        <HStack
+          w="full"
+          justifyContent={["space-between", "center"]}
+          paddingBottom="6"
+        >
+          <Flex flexDir="column">
+            <Flex align="center">
+              <Text fontWeight="bold" fontSize="7xl">
+                {Math.round(data.main.temp)}
+              </Text>
+              <CelsiusOrFahrenheit />
+            </Flex>
+
+            <Text minW="full" textTransform="capitalize" isTruncated>
+              {weather.description}
+            </Text>
           </Flex>
 
-          <Text minW="full" textTransform="capitalize" isTruncated>
-            {weather.description}
-          </Text>
-        </Flex>
+          <Image
+            borderRadius="full"
+            boxSize={["150px", "200px"]}
+            src={getImgUrl(weather.icon)}
+            alt={weather.main}
+          />
+        </HStack>
 
-        <Image
-          borderRadius="full"
-          boxSize={["150px", "200px"]}
-          src={getImgUrl(weather.icon)}
-          alt={weather.main}
-        />
-      </HStack>
+        <SimpleGrid
+          justifyContent="center"
+          justifyItems="center"
+          w="full"
+          columns={{ base: 2, lg: 3 }}
+          spacing={10}
+        >
+          <IconAndLabel
+            icon={FaTemperatureHigh}
+            label={Math.round(data.main.temp_max) + unitsLabel}
+          />
 
-      <SimpleGrid
-        justifyContent="center"
-        w="full"
-        columns={{ base: 2, lg: 3 }}
-        spacing={10}
-      >
-        <IconAndLabel
-          icon={FaTemperatureHigh}
-          label={data.main.temp_max + unitsLabel}
-        />
+          <IconAndLabel
+            icon={FaTemperatureLow}
+            label={Math.round(data.main.temp_min) + unitsLabel}
+          />
 
-        <IconAndLabel
-          icon={FaTemperatureLow}
-          label={data.main.temp_min + unitsLabel}
-        />
+          <IconAndLabel
+            icon={BsFillSunriseFill}
+            label={formatDate(msToDate(data.sys.sunrise))}
+          />
+          <IconAndLabel
+            icon={BsFillSunsetFill}
+            label={formatDate(msToDate(data.sys.sunset))}
+          />
 
-        <IconAndLabel
-          icon={BsFillSunriseFill}
-          label={formatDate(msToDate(data.sys.sunrise))}
-        />
-        <IconAndLabel
-          icon={BsFillSunsetFill}
-          label={formatDate(msToDate(data.sys.sunset))}
-        />
+          <IconAndLabel
+            icon={BsWind}
+            label={getWindSpeed(data.wind.speed, units)}
+          />
 
-        <IconAndLabel
-          icon={BsWind}
-          label={getWindSpeed(data.wind.speed, units)}
-        />
-
-        <IconAndLabel icon={WiHumidity} label={data.main.humidity + "%"} />
-      </SimpleGrid>
-    </VStack>
+          <IconAndLabel icon={WiHumidity} label={data.main.humidity + "%"} />
+        </SimpleGrid>
+      </VStack>
+    </Skeleton>
   );
 }

@@ -8,8 +8,8 @@ type Location = {
 export const locationAtom = atom<Location>({ latitude: 0, longitude: 0 });
 
 export enum Units {
-  celsius = "celsius",
-  fahrenheit = "fahrenheit",
+  celsius = "metric",
+  fahrenheit = "imperial",
 }
 
 export const unitsAtom = atom<Units>(Units.fahrenheit);
