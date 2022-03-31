@@ -1,4 +1,4 @@
-import { Center, Heading, Spinner, Text, VStack } from "@chakra-ui/react";
+import { Heading, Spinner, Text, VStack } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 import { ReactNode, useEffect, useState } from "react";
 import { locationAtom } from "../atoms";
