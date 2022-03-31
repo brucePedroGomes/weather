@@ -1,4 +1,4 @@
-import { Heading, VStack } from "@chakra-ui/react";
+import { Center, Heading, Spinner, Text, VStack } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 import { ReactNode, useEffect, useState } from "react";
 import { locationAtom } from "../atoms";
@@ -43,13 +43,17 @@ export function NeedLocation({ children }: { children: ReactNode }) {
 
   const hasSupport = Boolean(navigator.geolocation);
 
-  const message = !hasSupport
-    ? "Your browser does not support Geolocation"
-    : "We need your location";
-
   return (
     <VStack>
-      <Heading>{message}</Heading>
+      {!hasSupport && (
+        <Heading>Your browser does not support Geolocation</Heading>
+      )}
+      {hasSupport && (
+        <VStack>
+          <Heading>I need your location to work</Heading>
+          <Text>I'm waiting for you...</Text> <Spinner />
+        </VStack>
+      )}
     </VStack>
   );
 }

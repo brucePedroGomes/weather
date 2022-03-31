@@ -27,7 +27,7 @@ export function RefetchButton() {
     if (differenceInMinutes(new Date(), refetchDate) < 1) {
       toast({
         title: "Keep calm",
-        description: "the last update happened in less than a minute",
+        description: "The last update happened in less than a minute",
         position: "top",
         isClosable: true,
       });
