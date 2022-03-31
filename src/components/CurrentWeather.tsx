@@ -8,28 +8,33 @@ import {
   VStack,
   SimpleGrid,
   Spinner,
-  Divider,
 } from "@chakra-ui/react";
 import { useWeather } from "../hooks";
 import { MdOutlineLocationOn } from "react-icons/md";
 import { BsWind } from "react-icons/bs";
 import { WiHumidity } from "react-icons/wi";
 
-import { formatDate, getImgUrl, getWideSpeedInMph, msToDate } from "../utils";
+import { formatDate, getImgUrl, getWindSpeed, msToDate } from "../utils";
 import { format } from "date-fns";
 import { IconAndLabel } from "./IconAndLabel";
 import { BsFillSunriseFill, BsFillSunsetFill } from "react-icons/bs";
 import { FaTemperatureHigh, FaTemperatureLow } from "react-icons/fa";
 import { useAtom } from "jotai";
-import { locationAtom } from "../atoms";
+import { locationAtom, Units, unitsAtom } from "../atoms";
 import { GenericError } from "./Feedback";
+import { CelsiusOrFahrenheit } from "./CelsiusOrFahrenheit";
+import { useMemo } from "react";
 
 export function CurrentWeather() {
   const [location] = useAtom(locationAtom);
+  const [units] = useAtom(unitsAtom);
+
+  const isCelsius = useMemo(() => units === Units.celsius, [units]);
 
   const { data, isLoading, error } = useWeather({
     lat: location.latitude,
     lon: location.longitude,
+    units: isCelsius ? "metric" : "imperial",
   });
 
   if (isLoading) {
@@ -41,6 +46,8 @@ export function CurrentWeather() {
   }
 
   const weather = data.weather[0];
+  const unitsLabel = isCelsius ? " °C" : " °F";
+  //
 
   return (
     <VStack alignItems="start" w="full">
@@ -52,11 +59,11 @@ export function CurrentWeather() {
         </VStack>
       </HStack>
 
-      <HStack>
+      <HStack w="full" justifyContent="space-between">
         <Flex flexDir="column">
           <Flex align="center">
             <Text fontSize="6xl">{Math.round(data?.main.temp)}</Text>
-            <Text fontSize="3xl">°C</Text>
+            <CelsiusOrFahrenheit />
           </Flex>
 
           <Text minW="full" textTransform="capitalize" isTruncated>
@@ -80,7 +87,7 @@ export function CurrentWeather() {
       >
         <IconAndLabel
           icon={BsWind}
-          label={getWideSpeedInMph(data.wind.speed) + " mph"}
+          label={getWindSpeed(data.wind.speed, units)}
         />
 
         <IconAndLabel
@@ -96,12 +103,12 @@ export function CurrentWeather() {
 
         <IconAndLabel
           icon={FaTemperatureHigh}
-          label={data.main.temp_max + "°C"}
+          label={data.main.temp_max + unitsLabel}
         />
 
         <IconAndLabel
           icon={FaTemperatureLow}
-          label={data.main.temp_min + "°C"}
+          label={data.main.temp_min + unitsLabel}
         />
       </SimpleGrid>
     </VStack>

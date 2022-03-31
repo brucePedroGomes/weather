@@ -4,6 +4,7 @@ import { api } from "../services";
 type RequestWeather = {
   lat: number;
   lon: number;
+  units: "metric" | "imperial";
 };
 
 export type WeatherResponse = {
@@ -32,7 +33,7 @@ export type WeatherResponse = {
 function getWeather(params: RequestWeather) {
   return async () => {
     const { data } = await api.get<WeatherResponse>(
-      `/weather?lat=${params.lat}&lon=${params.lon}&units=metric`
+      `/weather?lat=${params.lat}&lon=${params.lon}&units=${params.units}`
     );
     return data;
   };
