@@ -9,7 +9,7 @@ type Props = {
 
 export function Header({ city }: Props) {
   return (
-    <HStack justifyContent="space-between" w="full">
+    <HStack justifyContent="space-between" w="full" isTruncated>
       <Flex flexDir="column">
         <Flex align="center">
           <Icon as={MdOutlineLocationOn} boxSize="8" />
