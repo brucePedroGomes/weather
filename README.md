@@ -23,8 +23,8 @@
 
 ---
 
-  <p align="center"> Made with 💜 Pedro Gomes  </p>
+<p align="center">
+  Made with 💜 by <a href="https://www.linkedin.com/in/pedroleinar/">Pedro Gomes</a>
+</p>
 
-<img src=".github/web.png" alt="web image"><br /><br />
-
-  <img src=".github/mobile.png" alt="mobile image" height="200">
+<img src=".github/weather.png" alt="weather image"><br /><br />
