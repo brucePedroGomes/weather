@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { Units } from "../atoms";
 
 export function getImgUrl(id: string) {
-  return `http://openweathermap.org/img/wn/${id}@4x.png`;
+  return `https://openweathermap.org/img/wn/${id}@4x.png`;
 }
 
 export function msToDate(number: number) {
