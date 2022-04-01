@@ -43,7 +43,7 @@ export function RefetchButton() {
   }, [isFetching]);
 
   return (
-    <Flex flexDir="row" align="center">
+    <Flex flexDir={["column", "row"]} align={["end", "center"]}>
       <IconButton
         variant="unstyled"
         aria-label="refetch"
@@ -51,7 +51,9 @@ export function RefetchButton() {
         _focus={{ border: "none" }}
         icon={<AiOutlineReload size={24} />}
       />
-      <Text>last updated on {format(refetchDate, "eee, hh:mm:ss")} </Text>
+      <Text fontSize={["sm", "md"]}>
+        last updated on {format(refetchDate, "eee, hh:mm:ss")}{" "}
+      </Text>
     </Flex>
   );
 }

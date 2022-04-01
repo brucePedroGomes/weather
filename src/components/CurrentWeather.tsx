@@ -1,8 +1,6 @@
 import {
   Flex,
-  Heading,
   HStack,
-  Icon,
   Image,
   Text,
   VStack,
@@ -10,12 +8,12 @@ import {
   Skeleton,
 } from "@chakra-ui/react";
 import { useCurrentWeather } from "../hooks";
-import { MdOutlineLocationOn } from "react-icons/md";
+
 import { BsWind } from "react-icons/bs";
 import { WiHumidity } from "react-icons/wi";
 
 import { formatDate, getImgUrl, getWindSpeed, msToDate } from "../utils";
-import { format } from "date-fns";
+
 import { IconAndLabel } from "./IconAndLabel";
 import { BsFillSunriseFill, BsFillSunsetFill } from "react-icons/bs";
 import { FaTemperatureHigh, FaTemperatureLow } from "react-icons/fa";
@@ -23,7 +21,8 @@ import { useAtom } from "jotai";
 import { locationAtom, Units, unitsAtom } from "../atoms";
 import { GenericError, Loading } from "./Feedback";
 import { CelsiusOrFahrenheit } from "./CelsiusOrFahrenheit";
-import { RefetchButton } from "./RefetchButton";
+
+import { Header } from "./Header";
 
 export function CurrentWeather() {
   const [location] = useAtom(locationAtom);
@@ -49,20 +48,7 @@ export function CurrentWeather() {
   return (
     <Skeleton w="full" isLoaded={data && !isLoading}>
       <VStack alignItems="start" w="full">
-        <HStack justifyContent="space-between" w="full">
-          <VStack>
-            <Flex align="center">
-              <Icon as={MdOutlineLocationOn} boxSize="8" />
-              <Heading>{data.name}</Heading>
-            </Flex>
-
-            <Text paddingLeft="6" fontSize="sm">
-              {format(new Date(), "eeee '•' h':'mma ")}{" "}
-            </Text>
-          </VStack>
-          <RefetchButton />
-        </HStack>
-
+        <Header city={data.name} />
         <HStack
           w="full"
           justifyContent={["space-between", "center"]}
